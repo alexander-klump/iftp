@@ -19,11 +19,12 @@
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": ["^renv\\.lock$"],
+      "managerFilePatterns": ["/^renv\\.lock$/"],
       "matchStrings": [
-        "\"Package\":\\s*\"(?<depName>[^\"]+)\"[^}]*\"Version\":\\s*\"(?<currentValue>[^\"]+)\""
+        "\"Package\":\\s*\"(?<depName>[^\"]+)\",\\s*\"Version\":\\s*\"(?<currentValue>[^\"]+)\""
       ],
-      "datasourceTemplate": "cran"
+      "datasourceTemplate": "cran",
+      "versioningTemplate": "loose"
     }
   ]
 }
