@@ -1,0 +1,14 @@
+^renv$
+^renv\.lock$
+^\.Rprofile$
+^\.github$
+^\.editorconfig$
+^\.lintr$
+^LICENSE\.md$
+^\.git$
+^\.vscode$
+^.*\.Rproj$
+^renovate\.json$
+^\.dockerignore$
+^Dockerfile$
+^helm$

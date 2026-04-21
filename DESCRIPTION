@@ -1,0 +1,41 @@
+Package: iftp
+Title: Inverse First-Passage Time Problem and N-Branching Markov Process
+    Simulations
+Version: 0.1.0
+Authors@R:
+    person("Alexander", "Klump", , "alexander.klump@posteo.de",
+           role = c("aut", "cre"))
+Description: Simulation tools for the inverse first-passage time problem
+    (IFTP) and N-branching Markov process (N-BMP). Implements three IFTP
+    boundary approximation algorithms (Anulova discretization, quantile
+    discretization, and soft-killing IFPT), particle system simulations
+    (N-BMP and quantile thinning particle system), and an interactive Shiny application for
+    exploring results. Based on Klump & Savov (2025), Klump (2023), Klump &
+    Kolb (2024), De Masi et al. (2019), and Bérard & Frénais (2023).
+License: MIT + file LICENSE
+URL: https://github.com/alexander-klump/iftp
+BugReports: https://github.com/alexander-klump/iftp/issues
+Depends:
+    R (>= 4.1.0)
+Imports:
+    cli,
+    rlang
+Suggests:
+    bslib,
+    covr,
+    flexsurv,
+    furrr,
+    future,
+    ggplot2,
+    jsonlite,
+    knitr,
+    lintr,
+    quarto,
+    shiny,
+    shinytest2,
+    styler,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3

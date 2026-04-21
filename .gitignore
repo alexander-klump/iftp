@@ -1,0 +1,29 @@
+# R package build artifacts
+*.Rcheck/
+*.tar.gz
+src/*.o
+src/*.so
+src/*.dll
+
+Rplots.pdf
+
+# R session
+.Rhistory
+.Rdata
+.RData
+.Rproj.user/
+
+# renv
+renv/library/
+renv/staging/
+renv/sandbox/
+renv/python/
+
+# IDE
+.idea/
+.vscode/
+*.Rproj
+
+# OS
+.DS_Store
+Thumbs.db

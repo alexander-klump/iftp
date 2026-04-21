@@ -1,0 +1,11 @@
+.git
+.github
+.vscode
+tests
+vignettes
+man
+*.Rproj
+renv/library
+renv/staging
+renv/sandbox
+renv/python
