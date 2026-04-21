@@ -6,9 +6,9 @@
 ^\.lintr$
 ^LICENSE\.md$
 ^\.git$
+^\.gitattributes$
 ^\.vscode$
 ^.*\.Rproj$
-^renovate\.json$
 ^\.dockerignore$
 ^Dockerfile$
 ^helm$
