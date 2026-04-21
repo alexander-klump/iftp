@@ -215,7 +215,10 @@ test_that("dispatch passes method to iftp_quantile", {
     process = process_bm(), cost = abs, init = NULL,
     method = "order_statistics", seed = 42
   )
-  result <- shiny_dispatch_simulation(params)
+  expect_warning(
+    result <- shiny_dispatch_simulation(params),
+    "Insufficient particles"
+  )
   expect_s3_class(result, "iftp_result")
   expect_equal(result$params$method, "order_statistics")
 })

@@ -19,8 +19,7 @@ check_numeric_scalar <- function(x, name) {
 }
 
 check_positive_integer <- function(x, name) {
-  if (!is.numeric(x) || length(x) != 1L || is.na(x) || x < 1 ||
-    x != trunc(x)) {
+  if (!is.numeric(x) || length(x) != 1L || is.na(x) || x < 1 || x != trunc(x)) {
     abort(paste0("`", name, "` must be a single positive integer."))
   }
 }

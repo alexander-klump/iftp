@@ -201,10 +201,13 @@ test_that("iftp_quantile method = quantiles is default (unchanged behavior)", {
 })
 
 test_that("iftp_quantile method = order_statistics returns iftp_result", {
-  result <- iftp_quantile(
-    time_steps = 10, remove_per_step = 10,
-    cdf = dist_exponential(), time_horizon = 2,
-    method = "order_statistics", seed = 42
+  expect_warning(
+    result <- iftp_quantile(
+      time_steps = 10, remove_per_step = 10,
+      cdf = dist_exponential(), time_horizon = 2,
+      method = "order_statistics", seed = 42
+    ),
+    "Insufficient particles"
   )
   expect_s3_class(result, "iftp_result")
   expect_s3_class(result$boundary, "data.frame")
@@ -213,16 +216,18 @@ test_that("iftp_quantile method = order_statistics returns iftp_result", {
 })
 
 test_that("iftp_quantile order_statistics is reproducible with seed", {
-  r1 <- iftp_quantile(
-    time_steps = 10, remove_per_step = 10,
-    cdf = dist_exponential(), time_horizon = 2,
-    method = "order_statistics", seed = 42
-  )
-  r2 <- iftp_quantile(
-    time_steps = 10, remove_per_step = 10,
-    cdf = dist_exponential(), time_horizon = 2,
-    method = "order_statistics", seed = 42
-  )
+  suppressWarnings({
+    r1 <- iftp_quantile(
+      time_steps = 10, remove_per_step = 10,
+      cdf = dist_exponential(), time_horizon = 2,
+      method = "order_statistics", seed = 42
+    )
+    r2 <- iftp_quantile(
+      time_steps = 10, remove_per_step = 10,
+      cdf = dist_exponential(), time_horizon = 2,
+      method = "order_statistics", seed = 42
+    )
+  })
   expect_equal(r1, r2)
 })
 
@@ -276,10 +281,13 @@ test_that("iftp_quantile order_statistics differs from quantiles", {
     cdf = dist_exponential(), time_horizon = 3,
     method = "quantiles", seed = 42
   )
-  r_os <- iftp_quantile(
-    time_steps = 20, remove_per_step = 10,
-    cdf = dist_exponential(), time_horizon = 3,
-    method = "order_statistics", seed = 42
+  expect_warning(
+    r_os <- iftp_quantile(
+      time_steps = 20, remove_per_step = 10,
+      cdf = dist_exponential(), time_horizon = 3,
+      method = "order_statistics", seed = 42
+    ),
+    "Insufficient particles"
   )
   expect_false(identical(r_q$boundary$time, r_os$boundary$time))
 })

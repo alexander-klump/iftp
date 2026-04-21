@@ -258,8 +258,7 @@ filename_parts_iftp <- function(result) {
   if (identical(p$algorithm, "quantile") && !is.null(p$remove_per_step)) {
     parts <- c(parts, paste0("rm", fmt_num(p$remove_per_step)))
   }
-  if (identical(p$algorithm, "quantile") &&
-    !is.null(p$method) && p$method != "quantiles") {
+  if (identical(p$algorithm, "quantile") && !is.null(p$method) && p$method != "quantiles") {
     parts <- c(parts, p$method)
   }
   parts
