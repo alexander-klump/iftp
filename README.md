@@ -1,11 +1,5 @@
 # iftp
 
-<!-- badges: start -->
-[![R-CMD-check](https://github.com/alexander-klump/iftp/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/alexander-klump/iftp/actions/workflows/R-CMD-check.yaml)
-[![lint](https://github.com/alexander-klump/iftp/actions/workflows/lint.yaml/badge.svg)](https://github.com/alexander-klump/iftp/actions/workflows/lint.yaml)
-[![test-coverage](https://github.com/alexander-klump/iftp/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/alexander-klump/iftp/actions/workflows/test-coverage.yaml)
-<!-- badges: end -->
-
 Simulation tools for the **inverse first-passage time problem** (IFTP) and
 **N-branching Markov process** (N-BMP).
 
@@ -13,10 +7,14 @@ Implements three IFTP boundary approximation algorithms:
 
 - **Anulova discretization** — equidistant time grid, quantile-based particle removal
 - **Quantile discretization** — non-equidistant time grid from quantile function
-- **Soft-killing IFPT** — weighted particles with soft killing rate on dyadic mesh
+- **Soft-killing IFPT** — equidistant time grid, weighted particles with soft killing (no hard removal)
 
-Plus particle system simulations (N-BMP and quantile thinning particle system) and an interactive
-Shiny application.
+Plus two particle system simulations:
+
+- **N-BMP** — N particles with Poisson branching events; worst particle (largest cost) removed and replaced by a copy of a random other particle
+- **Quantile thinning (QTPS)** — N particles on a quantile-derived time grid; worst particle permanently removed at each step, no replacement
+
+An interactive Shiny application is also included.
 
 ## Getting started
 
@@ -25,6 +23,10 @@ Shiny application.
 ```r
 # install.packages("pak")
 pak::pak("alexander-klump/iftp")
+
+# Pin to a specific release or commit for reproducibility:
+pak::pak("alexander-klump/iftp@v0.1.0")   # tag
+pak::pak("alexander-klump/iftp@1cf2acb")  # commit SHA
 ```
 
 ### IFTP boundary approximation
