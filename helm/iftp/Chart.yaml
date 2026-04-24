@@ -1,6 +1,0 @@
-apiVersion: v2
-name: iftp
-description: Shiny app for inverse first-passage time simulations and N-BMP
-type: application
-version: 0.1.0
-appVersion: "0.1.0"

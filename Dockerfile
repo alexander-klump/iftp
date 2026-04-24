@@ -1,9 +1,13 @@
+# syntax=docker/dockerfile:1.7
 # --- Stage 1: builder ---
 FROM rocker/r-ver:4.5.3 AS builder
 
-# System dependencies for compiling R packages
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    cmake \
+# System dependencies for compiling runtime R packages
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    rm -f /etc/apt/apt.conf.d/docker-clean && \
+    apt-get update && apt-get install -y --no-install-recommends \
+    curl \
     libcurl4-openssl-dev \
     libfontconfig1-dev \
     libfreetype6-dev \
@@ -13,23 +17,26 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libpng-dev \
     libssl-dev \
     libtiff-dev \
-    libwebp-dev \
+    libuv1-dev \
     libxml2-dev \
-    zlib1g-dev \
-  && rm -rf /var/lib/apt/lists/*
+    zlib1g-dev
 
 WORKDIR /build
 
-# Restore renv dependencies into system library (layer caching)
-COPY renv.lock .Rprofile DESCRIPTION ./
+# Restore only runtime packages (and their transitive deps) from the lockfile.
+# Dev tools like devtools/roxygen2/pkgdown/testthat are skipped.
+COPY renv.lock .Rprofile ./
 COPY renv/activate.R renv/activate.R
-RUN Rscript -e " \
-  source('renv/activate.R'); \
-  renv::restore(prompt = FALSE); \
-  lib <- renv::paths\$library(); \
+RUN --mount=type=cache,target=/root/.cache/R/renv,sharing=locked \
+    Rscript -e 'source("renv/activate.R"); \
+  renv::restore(prompt = FALSE, packages = c( \
+    "cli", "rlang", \
+    "shiny", "bslib", "ggplot2", \
+    "flexsurv", "future", "jsonlite", "promises" \
+  )); \
+  lib <- renv::paths$library(); \
   pkgs <- list.dirs(lib, full.names = TRUE, recursive = FALSE); \
-  file.copy(pkgs, '/usr/local/lib/R/site-library', recursive = TRUE) \
-"
+  file.copy(pkgs, "/usr/local/lib/R/site-library", recursive = TRUE)'
 
 # Install the package itself (bypass renv so it goes to site-library)
 COPY . .
@@ -39,7 +46,10 @@ RUN R CMD INSTALL --no-multiarch --with-keep.source --library=/usr/local/lib/R/s
 FROM rocker/r-ver:4.5.3
 
 # Runtime system libraries only (no -dev packages)
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    rm -f /etc/apt/apt.conf.d/docker-clean && \
+    apt-get update && apt-get install -y --no-install-recommends \
     curl \
     libcurl4 \
     libfontconfig1 \
@@ -49,9 +59,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libjpeg-turbo8 \
     libpng16-16t64 \
     libtiff6 \
+    libuv1 \
     libwebp7 \
-    libxml2 \
-  && rm -rf /var/lib/apt/lists/*
+    libxml2
 
 # Copy installed R library from builder
 COPY --from=builder /usr/local/lib/R/site-library /usr/local/lib/R/site-library
