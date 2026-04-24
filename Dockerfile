@@ -1,9 +1,8 @@
 # --- Stage 1: builder ---
 FROM rocker/r-ver:4.5.3 AS builder
 
-# System dependencies for compiling R packages
+# System dependencies for compiling runtime R packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    cmake \
     libcurl4-openssl-dev \
     libfontconfig1-dev \
     libfreetype6-dev \
@@ -13,23 +12,26 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libpng-dev \
     libssl-dev \
     libtiff-dev \
-    libwebp-dev \
+    libuv1-dev \
     libxml2-dev \
     zlib1g-dev \
   && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /build
 
-# Restore renv dependencies into system library (layer caching)
-COPY renv.lock .Rprofile DESCRIPTION ./
+# Restore only runtime packages (and their transitive deps) from the lockfile.
+# Dev tools like devtools/roxygen2/pkgdown/testthat are skipped.
+COPY renv.lock .Rprofile ./
 COPY renv/activate.R renv/activate.R
-RUN Rscript -e " \
-  source('renv/activate.R'); \
-  renv::restore(prompt = FALSE); \
-  lib <- renv::paths\$library(); \
+RUN Rscript -e 'source("renv/activate.R"); \
+  renv::restore(prompt = FALSE, packages = c( \
+    "cli", "rlang", \
+    "shiny", "bslib", "ggplot2", \
+    "flexsurv", "future", "jsonlite", "promises" \
+  )); \
+  lib <- renv::paths$library(); \
   pkgs <- list.dirs(lib, full.names = TRUE, recursive = FALSE); \
-  file.copy(pkgs, '/usr/local/lib/R/site-library', recursive = TRUE) \
-"
+  file.copy(pkgs, "/usr/local/lib/R/site-library", recursive = TRUE)'
 
 # Install the package itself (bypass renv so it goes to site-library)
 COPY . .
@@ -49,6 +51,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libjpeg-turbo8 \
     libpng16-16t64 \
     libtiff6 \
+    libuv1 \
     libwebp7 \
     libxml2 \
   && rm -rf /var/lib/apt/lists/*
