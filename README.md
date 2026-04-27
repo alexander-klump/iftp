@@ -133,20 +133,7 @@ docker run -p 3838:3838 iftp-shiny
 ### System dependencies (Ubuntu/Debian)
 
 ```bash
-sudo apt-get install -y \
-  cmake \
-  pandoc \
-  pari-gp \
-  libfontconfig1-dev \
-  libfreetype6-dev \
-  libharfbuzz-dev \
-  libfribidi-dev \
-  libpng-dev \
-  libtiff-dev \
-  libjpeg-dev \
-  libwebp-dev \
-  libuv1-dev \
-  libgit2-dev
+sudo bash dev/install-system-deps.sh
 ```
 
 ### macOS

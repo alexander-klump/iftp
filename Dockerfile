@@ -2,26 +2,14 @@
 # --- Stage 1: builder ---
 FROM rocker/r-ver:4.5.3 AS builder
 
-# System dependencies for compiling runtime R packages
+WORKDIR /build
+
+# System dependencies for compiling R packages (shared with dev setup + CI)
+COPY dev/install-system-deps.sh dev/install-system-deps.sh
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
     rm -f /etc/apt/apt.conf.d/docker-clean && \
-    apt-get update && apt-get install -y --no-install-recommends \
-    curl \
-    libcurl4-openssl-dev \
-    libfontconfig1-dev \
-    libfreetype6-dev \
-    libfribidi-dev \
-    libharfbuzz-dev \
-    libjpeg-dev \
-    libpng-dev \
-    libssl-dev \
-    libtiff-dev \
-    libuv1-dev \
-    libxml2-dev \
-    zlib1g-dev
-
-WORKDIR /build
+    bash dev/install-system-deps.sh
 
 # Restore only runtime packages (and their transitive deps) from the lockfile.
 # Dev tools like devtools/roxygen2/pkgdown/testthat are skipped.
