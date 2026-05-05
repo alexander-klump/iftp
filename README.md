@@ -170,29 +170,6 @@ docker run -d -p 3838:3838 --restart unless-stopped --name iftp iftp-shiny
 
 Access at <http://localhost:3838>. Stop with `docker stop iftp`.
 
-### Kubernetes (Helm)
-
-A Helm chart is provided in `helm/iftp/`.
-
-```bash
-helm install iftp helm/iftp/ \
-  --set image.repository=registry.local/iftp-shiny
-
-# With Gateway API HTTPRoute
-helm install iftp helm/iftp/ \
-  --set httpRoute.enabled=true \
-  --set httpRoute.parentRefs[0].name=my-gateway \
-  --set httpRoute.parentRefs[0].namespace=gateway-ns \
-  --set httpRoute.hostnames[0]=iftp.example.com
-
-# Private registry
-helm install iftp helm/iftp/ \
-  --set image.repository=registry.local/iftp-shiny \
-  --set imagePullSecrets[0].name=my-registry-secret
-```
-
-See `helm/iftp/values.yaml` for all configuration options.
-
 ## License
 
 MIT
